@@ -1,0 +1,91 @@
+<odoo>
+  <data>
+
+    <!-- Material -->
+    <record id="material_tree_view" model="ir.ui.view">
+      <field name="name">Material List View</field>
+      <field name="model">material.material</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="code"/>
+          <field name="name"/>
+          <field name="material_type"/>
+          <field name="buy_price"/>
+          <field name="supplier_id"/>
+        </tree>
+      </field>
+    </record>
+
+    <record id="material_form_view" model="ir.ui.view">
+      <field name="name">Material Form View</field>
+      <field name="model">material.material</field>
+      <field name="arch" type="xml">
+        <form>
+          <sheet>
+            <group>
+              <group>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="material_type"/>
+              </group>
+              <group>
+                <field name="buy_price"/>
+                <field name="supplier_id"/>
+              </group>
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record id="material_search_view" model="ir.ui.view">
+      <field name="name">Material Search View</field>
+      <field name="model">material.material</field>
+      <field name="arch" type="xml">
+          <search>
+              <field name="material_type"/>
+              <field name="supplier_id"/>
+              <group expand='0' string='Filters'>
+                  <filter name='material_type_fabric' string="Fabric" domain="[('material_type','=', 'fabric')]"/>
+                  <filter name='material_type_jeans' string="Jeans" domain="[('material_type','=', 'jeans')]"/>
+                  <filter name='material_type_cotton' string="Cotton" domain="[('material_type','=', 'cotton')]"/>
+              </group>
+              <group expand='0' string='Group by...'>
+                  <filter string='Material Type' name="group_by_material_type" domain="[]" context="{'group_by': 'material_type'}"/>
+                  <filter string='Related Supplier' name="group_by_supplier_id" domain="[]" context="{'group_by': 'supplier_id'}"/>
+              </group>
+              </search>
+          </field>
+    </record>
+
+    <record id="material_action" model="ir.actions.act_window">
+      <field name="name">Material</field>
+      <field name="res_model">material.material</field>
+      <field name="view_mode">tree,form</field>
+      <field name="domain">[]</field>
+      <field name="context">{'search_default_group_by_material_type':1}</field>
+      <field name="search_view_id" ref="material_search_view" />
+      <field name="view_ids" eval="[(5, 0, 0),
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('material_tree_view')}),
+        (0, 0, {'view_mode': 'form', 'view_id': ref('material_form_view')})]"/>
+    </record>
+
+    <menuitem id="material_head" name="Material"/>
+
+    <menuitem id="material_menu" name="Material" parent="material_head" action="material_action"/>
+
+    <!-- Master data -->
+    <record id="partner_action" model="ir.actions.act_window">
+      <field name="name">Partner</field>
+      <field name="res_model">res.users</field>
+      <field name="view_mode">tree,form</field>
+      <field name="domain">[]</field>
+      <field name="context">{}</field>
+    </record>
+
+    <menuitem id="master_data_menu" name="Master Data" parent="material_head"/>
+
+    <menuitem id="partner_menu" name="Partner" parent="master_data_menu" action="partner_action"/>
+
+  </data>
+</odoo>
